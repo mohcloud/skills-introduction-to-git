@@ -1,0 +1,35 @@
+---
+- name: Deploy Nginx to web servers
+  hosts: webservers
+  become: true
+
+  tasks:
+
+    - name: Install Nginx
+      ansible.builtin.package:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Deploy test web page
+      ansible.builtin.copy:
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>DevOps Nginx Deployment</title>
+          </head>
+          <body>
+            <h1>Nginx deployed successfully using Ansible!</h1>
+            <p>Server: {{ inventory_hostname }}</p>
+          </body>
+          </html>
+        dest: /usr/share/nginx/html/index.html
+        owner: root
+        group: root
+        mode: "0644"
